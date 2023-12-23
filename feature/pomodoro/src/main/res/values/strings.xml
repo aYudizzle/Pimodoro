@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="play">Play</string>
+    <string name="timer_pause">Pause</string>
+    <string name="stop">Stop</string>
+    <string name="timeout">Break Time</string>
+    <string name="reset">Reset</string>
+    <string name="finish">Finished</string>
+    <string name="reset_title">Restart your session?</string>
+    <string name="reset_dialog_text">Do you really want to restart your session?</string>
+    <string name="cancel_dialog_button_text">Cancel</string>
+    <string name="reset_dialog_button_text">Reset</string>
+
+</resources>

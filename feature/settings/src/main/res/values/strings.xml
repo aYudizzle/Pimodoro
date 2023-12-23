@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Settings</string>
+    <string name="settings_title">Pimodoro Settings</string>
+    <string name="dismiss_dialog_button_text">OK</string>
+    <string name="pause">Pause Settings</string>
+    <string name="sound">Sound Settings</string>
+    <string name="sound_pause">Pause Sound Setting</string>
+    <string name="sound_resume">Resume Sound Setting</string>
+    <string name="time_quarter">15 Minutes</string>
+    <string name="time_half">30 Minutes</string>
+    <string name="theme">Theme Settings</string>
+    <string name="dynamic_color_preference">Use dynamic Colors</string>
+    <string name="dynamic_color_yes">Yes</string>
+    <string name="dynamic_color_no">No</string>
+    <string name="dark_mode_config_system_default">System</string>
+    <string name="dark_mode_config_light">Light</string>
+    <string name="dark_mode_config_dark">Dark</string>
+    <string name="dark_mode_preference">Use Dark Mode</string>
+    <string name="ayupi">ayupi.dev</string>
+</resources>
