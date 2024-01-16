@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "dev.ayupi.pimodoro"
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
