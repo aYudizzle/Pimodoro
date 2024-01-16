@@ -13,7 +13,7 @@ Benachrichtigungen: Erhalte Benachrichtigungen, um den Wechsel zwischen Pomodoro
 Hintergrundmodus: Lass den Timer im Hintergrund laufen, während du andere Aufgaben auf deinem Gerät erledigst.
 
 Installation
-Lade die neueste Version der App hier herunter.
+Lade die neueste Version der App [hier](https://github.com/aYudizzle/Pimodoro/releases/tag/release) herunter.
 Öffne die heruntergeladene Datei und folge den Anweisungen zur Installation.
 Verwendung
 - Starte die App auf deinem Android-Gerät.
