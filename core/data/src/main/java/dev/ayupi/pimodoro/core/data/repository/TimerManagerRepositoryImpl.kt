@@ -19,4 +19,8 @@ class TimerManagerRepositoryImpl @Inject constructor(
     override fun stopTimer() {
         timerManager.stopTimer()
     }
+
+    override fun resetTimer() {
+        timerManager.resetTimer()
+    }
 }

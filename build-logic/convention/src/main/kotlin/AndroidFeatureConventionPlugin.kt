@@ -18,7 +18,6 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                     testInstrumentationRunner =
                         ""
                 }
-//                configureGradleManagedDevices(this)
             }
 
             dependencies {
@@ -30,15 +29,14 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
 
 //                add("implementation", project(":core:ui"))
                 add("implementation", project(":core:domain"))
-//                add("implementation", project(":core:analytics"))
 
                 add("testImplementation", kotlin("test"))
 //                add("testImplementation", project(":core:testing"))
                 add("androidTestImplementation", kotlin("test"))
 //                add("androidTestImplementation", project(":core:testing"))
 
-                add("implementation", libs.findLibrary("coil.kt").get())
-                add("implementation", libs.findLibrary("coil.kt.compose").get())
+//                add("implementation", libs.findLibrary("coil.kt").get())
+//                add("implementation", libs.findLibrary("coil.kt.compose").get())
 
                 add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
@@ -47,8 +45,6 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx.compose.ui.tooling").get())
                 add("debugImplementation", libs.findLibrary("androidx.compose.ui.tooling.preview").get())
 
-//                implementation("androidx.compose.ui:ui-tooling-preview:1.1.1")
-//                debugImplementation("androidx.compose.ui:ui-tooling:1.1.1")
                 add("implementation", libs.findLibrary("kotlinx.coroutines.android").get())
             }
         }

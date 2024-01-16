@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.projects
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.ayupi.android.library)
@@ -9,4 +11,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
+    implementation(projects.core.manager)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(projects.core.common)
+    implementation(projects.core.model)
 }

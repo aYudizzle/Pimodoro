@@ -55,6 +55,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.manager)
+    implementation(projects.core.service)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

@@ -10,4 +10,5 @@ interface TimerManager {
     fun startBreak()
 
     fun stopTimer()
+    fun resetTimer()
 }

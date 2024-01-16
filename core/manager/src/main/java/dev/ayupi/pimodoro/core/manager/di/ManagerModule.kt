@@ -26,5 +26,6 @@ object ManagerModule {
 
     @Provides
     @Singleton
-    fun provideTimerManager(piPreferencesDataStore: PiPreferencesDataStore) : TimerManager = TimerManagerImpl(piPreferencesDataStore = piPreferencesDataStore)
+    fun provideTimerManager(piPreferencesDataStore: PiPreferencesDataStore, soundManager: SoundManager) :
+            TimerManager = TimerManagerImpl(piPreferencesDataStore = piPreferencesDataStore, soundManager = soundManager)
 }

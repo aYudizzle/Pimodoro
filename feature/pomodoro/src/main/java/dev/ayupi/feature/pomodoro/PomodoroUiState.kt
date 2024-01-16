@@ -1,4 +1,4 @@
-import dev.ayupi.feature.pomodoro.TimerState
+import dev.ayupi.pimodoro.core.manager.data.TimerState
 
 /**
  * interface to represent the uiState
@@ -7,20 +7,14 @@ import dev.ayupi.feature.pomodoro.TimerState
  */
 sealed interface PomodoroUiState {
     data object Loading : PomodoroUiState
-    data class NotStarted(
-        val timerState: TimerState
-    ) : PomodoroUiState
-    data class Finished(
-        val timerState: TimerState
-    ) : PomodoroUiState
+    data object NotStarted : PomodoroUiState
+    data object Finished : PomodoroUiState
     data class Success(
-        val time: String,
-        val timeMillis: Long,
-        val pauseTime: String,
-        val pauseMillis: Long,
-        val timerState: TimerState,
-        val intervalCycleCount: Int,
-        val maxCycles: Int,
-        val pauseTimeMaxValue: Long,
+        val remainingTime: Long,
+        val fullDuration: Long,
+        val formattedTime: String,
+        val cycleCount: Int,
+        val timerState: String,
+        val maxCycleCount: Int,
     ) : PomodoroUiState
 }

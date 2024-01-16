@@ -7,11 +7,11 @@ import javax.inject.Inject
 class SoundManagerRepositoryImpl @Inject constructor(
     private val soundManager: SoundManager
 ) : SoundManagerRepository {
-    override fun playResumeSound(soundData: SoundData) {
+    override suspend fun playResumeSound(soundData: SoundData) {
         soundManager.playSound(soundData)
     }
 
-    override fun playPauseSound(soundData: SoundData) {
+    override suspend fun playPauseSound(soundData: SoundData) {
         soundManager.playSound(soundData)
     }
 }

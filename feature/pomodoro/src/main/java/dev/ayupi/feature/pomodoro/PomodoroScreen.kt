@@ -2,6 +2,7 @@ package dev.ayupi.feature.pomodoro
 
 import PomodoroUiState
 import PomodoroUiState.*
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -9,26 +10,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,7 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.ayupi.designsystem.components.PiBigIconButton
 import dev.ayupi.designsystem.components.PiBigIconButtonWithoutBorder
+import dev.ayupi.designsystem.icon.PiIcons
 import dev.ayupi.feature.pomodoro.R.*
 
 @Composable
@@ -53,22 +51,25 @@ fun PomodoroRoot(
 
     PomodoroScreen(
         state = uiState,
-        onTimerStateChanged = viewModel::onTimerSwitched,
-        navigateToTimer = navigateToTimer
+        navigateToTimer = navigateToTimer,
+        onStartTimerClicked = viewModel::startPomodoro,
+        onStopTimerClicked = viewModel::stopPomodoro
     )
 }
 
 @Composable
 internal fun PomodoroScreen(
     state: PomodoroUiState,
-    onTimerStateChanged: (TimerState) -> Unit,
     navigateToTimer: () -> Unit,
+    onStartTimerClicked: () -> Unit,
+    onStopTimerClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
 
         /**
          * Handles the different ScreenStates
@@ -87,8 +88,8 @@ internal fun PomodoroScreen(
             is NotStarted -> {
                 AnimatedVisibility(visible = true) {
                     PiBigIconButtonWithoutBorder(
-                        onClick = { onTimerStateChanged(TimerState.ACTIVE) },
-                        icon = state.timerState.unselectedIcon,
+                        onClick = onStartTimerClicked,
+                        icon = PiIcons.Play,
                         size = 200
                     )
                 }
@@ -97,59 +98,8 @@ internal fun PomodoroScreen(
             is Success -> {
                 TimerPanel(
                     state = state,
-                    onTimerStateChanged = onTimerStateChanged,
-                    navigateToTimer = navigateToTimer
-                )
-            }
-        }
-    }
-}
-
-
-@Composable
-private fun ColumnScope.TimerControlPanel(
-    timerState: TimerState,
-    onTimerStateChanged: (TimerState) -> Unit,
-    onShowDialog: (Boolean) -> Unit,
-) {
-    Row {
-        TimerState.entries.take(2).forEach {
-            val active = timerState == it || TimerState.FINISHED == timerState
-            Column(
-                modifier = Modifier.padding(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                IconButton(
-                    onClick = { onTimerStateChanged(it) },
-                    enabled = !active
-                ) {
-                    Icon(
-                        imageVector = if (active) it.selectedIcon else it.unselectedIcon,
-                        contentDescription = stringResource(
-                            id = it.iconDescriptionId
-                        )
-                    )
-                }
-                if (active) {
-                    Text(text = stringResource(id = it.titleTextId))
-                }
-            }
-        }
-        Column(
-            modifier = Modifier.padding(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            IconButton(
-                onClick = { onShowDialog(true) },
-                enabled = true
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.RestartAlt,
-                    contentDescription = stringResource(
-                        id = string.reset
-                    )
+                    navigateToTimer = navigateToTimer,
+                    onStopTimerClicked = onStopTimerClicked
                 )
             }
         }
@@ -159,58 +109,36 @@ private fun ColumnScope.TimerControlPanel(
 @Composable
 private fun ColumnScope.TimerPanel(
     state: Success,
-    onTimerStateChanged: (TimerState) -> Unit,
-    navigateToTimer: () -> Unit
+    navigateToTimer: () -> Unit,
+    onStopTimerClicked: () -> Unit
 ) {
     var showResetDialog by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
-    var pauseProgress by remember { mutableFloatStateOf(0f) }
     val animatedProgress = animateFloatAsState(
-        targetValue = progress,
+        targetValue = state.remainingTime.toFloat() / state.fullDuration.toFloat(),
         animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
         label = ""
     ).value
-
-    val animatedPauseProgress = animateFloatAsState(
-        targetValue = pauseProgress,
-        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-        label = ""
-    ).value
-
-    LaunchedEffect(state.timeMillis) {
-        progress = state.timeMillis / TIMER_CYCLE.toFloat()
-    }
-
-    LaunchedEffect(state.pauseMillis) {
-        pauseProgress = state.pauseMillis / state.pauseTimeMaxValue.toFloat()
-    }
 
     if (showResetDialog) {
         ResetDialog(
             onDismiss = { showResetDialog = false },
-            navigateToTimer = navigateToTimer,
+            navigateToTimer = {
+                onStopTimerClicked()
+                navigateToTimer()
+            },
         )
     }
 
-    if (state.timerState == TimerState.TIMEOUT) {
-        Box(
-            modifier = Modifier.size(150.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
-                trackColor = Color.Gray,
-                progress = animatedPauseProgress
-            )
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(text = state.pauseTime)
-            }
-        }
-    } else {
+    BackHandler {
+        showResetDialog = true
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+
         Box(
             modifier = Modifier.size(150.dp),
             contentAlignment = Alignment.Center
@@ -225,18 +153,14 @@ private fun ColumnScope.TimerPanel(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text(text = state.time)
-                Text(text = "${state.intervalCycleCount} of ${state.maxCycles}")
+                Text(state.timerState)
+                Text(text = state.formattedTime)
+                Text(text = "${state.cycleCount} / ${state.maxCycleCount}")
             }
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        PiBigIconButton(onClick = { showResetDialog = true }, icon = PiIcons.Reset, size = 48)
     }
-
-    Text(text = state.timerState.toString())
-    TimerControlPanel(
-        timerState = state.timerState,
-        onTimerStateChanged = onTimerStateChanged,
-        onShowDialog = { showResetDialog = it }
-    )
 }
 
 @Composable
@@ -246,7 +170,7 @@ private fun ColumnScope.FinishedPanel(
 ) {
     PiBigIconButtonWithoutBorder(
         onClick = { navigateToTimer() },
-        icon = state.timerState.unselectedIcon,
+        icon = PiIcons.FinishBorder,
         size = 200,
         tint = Color.Green
     )
